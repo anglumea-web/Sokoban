@@ -1,0 +1,46 @@
+name: JS Tailwind CI (Verbose)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: 🧪 Lint & Build Pipeline
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: 📥 Step 1 — Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Step 2 — Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: 📦 Step 3 — Install dependencies (npm ci)
+        run: |
+          echo "Installing dependencies using npm ci..."
+          npm ci
+          echo "✅ Dependencies installed successfully"
+
+      - name: 🔍 Step 4 — Run ESLint (code quality check)
+        run: |
+          echo "Running ESLint to check JavaScript & React code..."
+          npm run lint
+          echo "✅ ESLint passed with no errors"
+
+      - name: 🎨 Step 5 — Build Tailwind CSS
+        run: |
+          echo "Building Tailwind CSS..."
+          npm run build:css
+          echo "✅ Tailwind CSS build completed"
+
+      - name: 🎉 Step 6 — Pipeline completed
+        run: echo "All checks passed. Ready to merge 🚀"
